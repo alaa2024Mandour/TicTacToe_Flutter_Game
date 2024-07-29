@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'layout/game.dart';
+import 'layout/homePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Game(),
+      home: HomePage(),
     );
   }
 }
