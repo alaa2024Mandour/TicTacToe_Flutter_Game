@@ -14,7 +14,8 @@ class _GameState extends State<Game> {
   var titleStyle = const TextStyle(
     color: Colors.white,
     fontSize: 30,
-    fontWeight: FontWeight.bold
+    fontWeight: FontWeight.bold,
+    wordSpacing: 10,
   );
 
   int oScore =0;
@@ -86,7 +87,8 @@ class _GameState extends State<Game> {
                         // index.toString(),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35
                         ),
                       ),
                     ),
@@ -94,6 +96,13 @@ class _GameState extends State<Game> {
                 );
                 }),
           ),
+          Expanded(
+            child: Center(
+              child: Text(
+              " TEC TAC TOE ",
+              style:titleStyle,
+                        ),
+            ),)
         ],
       ),
     );
