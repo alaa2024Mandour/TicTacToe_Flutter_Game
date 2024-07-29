@@ -9,46 +9,104 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   bool oTurn = true;
-  List<String> displayXO =["","","","","","","","",""];
+  List<String> displayXO =['','','','','','','','',''];
+
+  var titleStyle = const TextStyle(
+    color: Colors.white,
+    fontSize: 30,
+    fontWeight: FontWeight.bold
+  );
+
+  int oScore =0;
+  int xScore =0;
+
+
+  int fillBox =0;
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: Colors.grey[800],
-      body: GridView.builder(
-        itemCount: 9,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (context,index){
-          return GestureDetector(
-            onTap: (){
-              tabbed(index);
-            },
-            child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color:Colors.grey)
-                ),
-              child: Center(
-                child: Text(
-                  displayXO[index],
-                  // index.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
+      body: Column(
+        children: [
+          Expanded(
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Player X",
+                        style:titleStyle,
+                      ),
+                      Text(
+                        "$xScore",
+                        style:titleStyle,
+                      )
+
+                    ],
                   ),
-                ),
-              ),
-            ),
-          );
-          }),
+                  const SizedBox(width:50,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Player O",
+                        style:titleStyle,
+                      ),
+                      Text(
+                        "$oScore",
+                        style:titleStyle,
+                      )
+
+                    ],
+                  ),
+                ],
+              )),
+          Expanded(
+            flex: 3,
+            child: GridView.builder(
+              itemCount: 9,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                itemBuilder: (context,index){
+                return GestureDetector(
+                  onTap: (){
+                    if(displayXO[index] == ''){
+                      tabbed(index);
+                    }
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color:Colors.grey)
+                      ),
+                    child: Center(
+                      child: Text(
+                        displayXO[index],
+                        // index.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+                }),
+          ),
+        ],
+      ),
     );
   }
 
   void tabbed(int index){
     setState(() {
-      if(oTurn){
+      if(oTurn ){
         displayXO[index] = 'O';
+        fillBox++;
       }else{
         displayXO[index] = 'X';
+        fillBox++;
       }
       oTurn = !oTurn;
       checkWinner();
@@ -56,47 +114,103 @@ class _GameState extends State<Game> {
   }
 
   void checkWinner(){
-    if(displayXO[0]==displayXO[1] && displayXO[1]==displayXO[2] && displayXO[0]!=""){
+    if(displayXO[0]==displayXO[1] && displayXO[1]==displayXO[2] && displayXO[0]!=''){
       showWinDialog();
     }
 
-    if(displayXO[3]==displayXO[4] && displayXO[4]==displayXO[5] && displayXO[3]!=""){
+    else if(displayXO[3]==displayXO[4] && displayXO[4]==displayXO[5] && displayXO[3]!=''){
       showWinDialog();
     }
 
-    if(displayXO[6]==displayXO[7] && displayXO[7]==displayXO[8] && displayXO[6]!=""){
+    else if(displayXO[6]==displayXO[7] && displayXO[7]==displayXO[8] && displayXO[6]!=''){
       showWinDialog();
     }
 
-    if(displayXO[0]==displayXO[3] && displayXO[3]==displayXO[6] && displayXO[0]!=""){
+    else if(displayXO[0]==displayXO[3] && displayXO[3]==displayXO[6] && displayXO[0]!=''){
       showWinDialog();
     }
 
-    if(displayXO[1]==displayXO[4] && displayXO[4]==displayXO[7] && displayXO[1]!=""){
+    else if(displayXO[1]==displayXO[4] && displayXO[4]==displayXO[7] && displayXO[1]!=''){
       showWinDialog();
     }
 
-    if(displayXO[2]==displayXO[5] && displayXO[5]==displayXO[8] && displayXO[2]!=""){
+    else if(displayXO[2]==displayXO[5] && displayXO[5]==displayXO[8] && displayXO[2]!=''){
       showWinDialog();
     }
 
-    if(displayXO[0]==displayXO[4] && displayXO[4]==displayXO[8] && displayXO[0]!=""){
+    else if(displayXO[0]==displayXO[4] && displayXO[4]==displayXO[8] && displayXO[0]!=''){
       showWinDialog();
     }
-
-    if(displayXO[2]==displayXO[4] && displayXO[4]==displayXO[6] && displayXO[2]!=""){
+    else if(displayXO[2]==displayXO[4] && displayXO[4]==displayXO[6] && displayXO[2]!=''){
       showWinDialog();
+    }
+    else if ( fillBox == 9){
+      showDrawDialog();
     }
   }
 
   void showWinDialog(){
       showDialog(
+        barrierDismissible: false,
           context: context,
           builder: (context){
-            return AlertDialog(
-              title: oTurn ?  const Text("Winner is : X") :  const Text("Winner is : O"),
-            );
+            if (oTurn){
+              xScore++;
+              return  AlertDialog(
+                title: const Text("Winner is : X"),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: (){
+                        clearBoard();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Try Again"))
+                ],
+              );
+            }
+            else{
+              oScore++;
+              return  AlertDialog(
+                title: const Text("Winner is : O"),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: (){
+                        clearBoard();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Try Again"))
+                ],
+              );
+            }
+
           }
           );
+  }
+
+  void showDrawDialog(){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context){
+           return AlertDialog(
+              title: const Text("Draw"),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: (){
+                      clearBoard();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Try Again"))
+              ],
+            );
+        }
+    );
+  }
+
+  void clearBoard(){
+    setState(() {
+      displayXO =['','','','','','','','',''];
+    });
+    fillBox=0;
   }
 }
